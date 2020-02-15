@@ -1207,7 +1207,6 @@ smartypants(int c, int *flags, MMIOT *f)
 } /* smartypants */
 
 
-#if WITH_LATEX
 /* process latex with arbitrary 2-character ( $$ .. $$, \[ .. \], \( .. \)
  * delimiters
  */
@@ -1227,7 +1226,6 @@ mathhandler(MMIOT *f, int e1, int e2)
     }
     return 0;
 }
-#endif
 
 
 /* process a body of text encased in some sort of tick marks.   If it
@@ -1410,12 +1408,10 @@ text(MMIOT *f)
 		    case EOF:	Qchar('\\', f);
 				break;
 
-#if WITH_LATEX
 		    case '[':
 		    case '(':   if ( mathhandler(f, '\\', (c =='(')?')':']') )
 				    break;
 				/* else fall through to default */
-#endif
 			
 		    default:    if ( escaped(f,c) ||
 				     strchr(">#.-+{}]![*_\\()`", c) )
@@ -1442,7 +1438,6 @@ text(MMIOT *f)
 			Qchar(c, f);
 		    break;
 
-#if WITH_LATEX
 	case '$':   if ( peek(f, 1) == '$' ) {
 			pull(f);
 			if ( mathhandler(f, '$', '$') )
@@ -1450,7 +1445,6 @@ text(MMIOT *f)
 			Qchar('$', f);
 		    }
 		    /* fall through to default */
-#endif
 	
 	default:    Qchar(c, f);
 		    break;
